@@ -1,3 +1,5 @@
+pub mod classify;
+
 use std::env;
 use std::ffi;
 use std::io;

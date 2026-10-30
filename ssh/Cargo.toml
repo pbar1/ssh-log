@@ -4,4 +4,6 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+bytes = "1"
+regex = { version = "1", default-features = false, features = ["std", "perf"] }
 tempfile = "3"

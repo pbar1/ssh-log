@@ -1,0 +1,26 @@
+\A(?:hostfile\.c:hostfile_replace_entries\(\):[0-9]+ \(bin=[^\r\n]*, pid=[0-9]+\): )?(?:Adding new key|Fixing match \((?:hostname|address)\)) for [^\r\n]* to [^\r\n]*: [^\r\n]* [^\r\n]*\z
+\A(?:sshconnect2\.c:ssh_userauth2\(\):[0-9]+ \(bin=[^\r\n]*, pid=[0-9]+\): )?Authenticated to [^\r\n]* \(\[[^\r\n]*\]:-?[0-9]+\) using "[^\r\n]*"\.\z
+\A(?:sshconnect2\.c:ssh_userauth2\(\):[0-9]+ \(bin=[^\r\n]*, pid=[0-9]+\): )?Authenticated to [^\r\n]* \(via proxy\) using "[^\r\n]*"\.\z
+\A(?:sshconnect2\.c:input_userauth_failure\(\):[0-9]+ \(bin=[^\r\n]*, pid=[0-9]+\): )?Authenticated using "[^\r\n]*" with partial success\.\z
+\A(?:clientloop\.c:client_loop\(\):[0-9]+ \(bin=[^\r\n]*, pid=[0-9]+\): )?Bytes per second: sent [-+0-9.a-fA-FxXpPeEinIfNaN]+, received [-+0-9.a-fA-FxXpPeEinIfNaN]+\z
+\A(?:ssh\.c:check_follow_cname\(\):[0-9]+ \(bin=[^\r\n]*, pid=[0-9]+\): )?Canonicalized DNS aliased hostname "[^\r\n]*" => "[^\r\n]*"\z
+\A(?:dns\.c:verify_host_key_dns\(\):[0-9]+ \(bin=[^\r\n]*, pid=[0-9]+\): )?DNS lookup error: [^\r\n]*\z
+\A(?:ssh-pkcs11\.c:pkcs11_login_slot\(\):[0-9]+ \(bin=[^\r\n]*, pid=[0-9]+\): )?Deferring PIN entry to reader keypad\.\z
+\A(?:dns\.c:verify_host_key_dns\(\):[0-9]+ \(bin=[^\r\n]*, pid=[0-9]+\): )?Error parsing fingerprint from DNS\.\z
+\A(?:clientloop\.c:client_loop\(\):[0-9]+ \(bin=[^\r\n]*, pid=[0-9]+\): )?Killed by signal -?[0-9]+\.\z
+\A(?:channels\.c:x11_open_helper\(\):[0-9]+ \(bin=[^\r\n]*, pid=[0-9]+\): |clientloop\.c:client_request_x11\(\):[0-9]+ \(bin=[^\r\n]*, pid=[0-9]+\): )?Rejected X11 connection after ForwardX11Timeout expired\z
+\A(?:clientloop\.c:client_loop\(\):[0-9]+ \(bin=[^\r\n]*, pid=[0-9]+\): )?Transferred: sent [0-9]+, received [0-9]+ bytes, in [-+0-9.a-fA-FxXpPeEinIfNaN]+ seconds\z
+\A(?:hostfile\.c:host_delete\(\):[0-9]+ \(bin=[^\r\n]*, pid=[0-9]+\): )?[^\r\n]*:[0-9]+: Removed [^\r\n]* key for host [^\r\n]*\z
+\A(?:hostfile\.c:host_delete\(\):[0-9]+ \(bin=[^\r\n]*, pid=[0-9]+\): )?[^\r\n]*:[0-9]+: invalid known_hosts entry\z
+\A(?:channels\.c:channel_handler\(\):[0-9]+ \(bin=[^\r\n]*, pid=[0-9]+\): )?channel -?[0-9]+: closing after [-+0-9.a-fA-FxXpPeEinIfNaN]+ seconds of inactivity\z
+\A(?:port-linux\.c:oom_adjust_setup\(\):[0-9]+ \(bin=[^\r\n]*, pid=[0-9]+\): )?error reading [^\r\n]*: [^\r\n]*\z
+\A(?:port-linux\.c:oom_adjust_restore\(\):[0-9]+ \(bin=[^\r\n]*, pid=[0-9]+\): |port-linux\.c:oom_adjust_setup\(\):[0-9]+ \(bin=[^\r\n]*, pid=[0-9]+\): )?error writing [^\r\n]*: [^\r\n]*\z
+\A(?:get_local_name: |canohost\.c:get_local_name\(\):[0-9]+ \(bin=[^\r\n]*, pid=[0-9]+\): )gethostname: [^\r\n]*\z
+\A(?:hostkeys_foreach_file: |hostfile\.c:hostkeys_foreach_file\(\):[0-9]+ \(bin=[^\r\n]*, pid=[0-9]+\): )invalid marker at [^\r\n]*:[0-9]+\z
+\A(?:hostkeys_foreach_file: |hostfile\.c:hostkeys_foreach_file\(\):[0-9]+ \(bin=[^\r\n]*, pid=[0-9]+\): )truncated line at [^\r\n]*:[0-9]+\z
+\A(?:kex_exchange_identification: |kex\.c:kex_exchange_identification\(\):[0-9]+ \(bin=[^\r\n]*, pid=[0-9]+\): )Connection closed by remote host\z
+\A(?:kex_exchange_identification: |kex\.c:kex_exchange_identification\(\):[0-9]+ \(bin=[^\r\n]*, pid=[0-9]+\): )banner line contains invalid characters\z
+\A(?:kex_exchange_identification: |kex\.c:kex_exchange_identification\(\):[0-9]+ \(bin=[^\r\n]*, pid=[0-9]+\): )banner line too long\z
+\A(?:kex_exchange_identification: |kex\.c:kex_exchange_identification\(\):[0-9]+ \(bin=[^\r\n]*, pid=[0-9]+\): )client sent invalid protocol identifier "[^\r\n]*"\z
+\A(?:channels\.c:channel_setup_fwd_listener_tcpip\(\):[0-9]+ \(bin=[^\r\n]*, pid=[0-9]+\): )?socket \[[^\r\n]*\]:[^\r\n]*: [^\r\n]*\z
+\A(?:port-linux\.c:memlock_onfault_setup\(\):[0-9]+ \(bin=[^\r\n]*, pid=[0-9]+\): )?unable to lock memory: [^\r\n]*\z
