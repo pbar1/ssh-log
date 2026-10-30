@@ -1,0 +1,3 @@
+[workspace]
+members = ["ssh", "ssh-force-command"]
+resolver = "3"
