@@ -1,7 +1,15 @@
 use std::io;
 use std::sync;
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+// OpenSSH portable e4d03fb, unambiguous VERBOSE formats.
+static VERBOSE: sync::LazyLock<regex::bytes::RegexSet> = sync::LazyLock::new(|| {
+    regex::bytes::RegexSetBuilder::new(include_str!("classify/verbose.regex").lines())
+        .unicode(false)
+        .build()
+        .expect("invalid built-in SSH log matcher")
+});
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
 pub enum Level {
     Unknown,
     Fatal,
@@ -42,12 +50,12 @@ impl<R: io::Read> Decoder<R> {
         let Some(mut end) = self.line_end(0)? else {
             return Ok(None);
         };
-        let (level, mut tail) = sniff(self.buffer[..end].trim_ascii_end());
-        while !matches!(tail, Tail::None) {
+        let (level, mut frame_state) = sniff(self.buffer[..end].trim_ascii_end());
+        while !matches!(frame_state, FrameState::None) {
             let Some(next) = self.line_end(end)? else {
                 break;
             };
-            if !tail.accept(self.buffer[end..next].trim_ascii_end()) {
+            if !frame_state.accept(self.buffer[end..next].trim_ascii_end()) {
                 break;
             }
             end = next;
@@ -84,7 +92,7 @@ impl<R: io::Read> Decoder<R> {
     }
 }
 
-enum Tail {
+enum FrameState {
     None,
     Lines(u8),
     Channels,
@@ -94,7 +102,7 @@ enum Tail {
     MatchingKey,
 }
 
-impl Tail {
+impl FrameState {
     fn accept(&mut self, line: &[u8]) -> bool {
         match self {
             Self::None => false,
@@ -145,30 +153,30 @@ fn art_border(line: &[u8]) -> bool {
     line.len() == 19 && line.starts_with(b"+") && line.ends_with(b"+")
 }
 
-fn sniff(line: &[u8]) -> (Level, Tail) {
+fn sniff(line: &[u8]) -> (Level, FrameState) {
     if line.starts_with(b"debug3: channel ")
         && line.ends_with(b": status: The following connections are open:")
     {
-        return (Level::Debug3, Tail::Channels);
+        return (Level::Debug3, FrameState::Channels);
     }
     if line.starts_with(b"Host key fingerprint is: ") {
-        return (Level::Unknown, Tail::ArtStart);
+        return (Level::Unknown, FrameState::ArtStart);
     }
     if art_border(line) {
-        return (Level::Unknown, Tail::Art);
+        return (Level::Unknown, FrameState::Art);
     }
     if line.starts_with(b"The fingerprint for the ")
         && line.ends_with(b" key sent by the remote host is")
     {
-        return (Level::Unknown, Tail::Lines(1));
+        return (Level::Unknown, FrameState::Lines(1));
     }
     if line.starts_with(b"WARNING: ") && contains(line, b" key found for host ") {
-        return (Level::Unknown, Tail::Lines(2));
+        return (Level::Unknown, FrameState::Lines(2));
     }
     if line.starts_with(b"Warning: the ")
         && contains(line, b"differs from the key for the IP address")
     {
-        return (Level::Unknown, Tail::HostKey);
+        return (Level::Unknown, FrameState::HostKey);
     }
     for (prefix, level) in [
         (b"debug1: ", Level::Debug1),
@@ -176,7 +184,7 @@ fn sniff(line: &[u8]) -> (Level, Tail) {
         (b"debug3: ", Level::Debug3),
     ] {
         if line.starts_with(prefix) {
-            return (level, Tail::None);
+            return (level, FrameState::None);
         }
     }
     let level = if VERBOSE.is_match(line) {
@@ -184,17 +192,9 @@ fn sniff(line: &[u8]) -> (Level, Tail) {
     } else {
         Level::Unknown
     };
-    (level, Tail::None)
+    (level, FrameState::None)
 }
 
 fn contains(line: &[u8], needle: &[u8]) -> bool {
     line.windows(needle.len()).any(|part| part == needle)
 }
-
-// OpenSSH portable e4d03fb, unambiguous VERBOSE formats.
-static VERBOSE: sync::LazyLock<regex::bytes::RegexSet> = sync::LazyLock::new(|| {
-    regex::bytes::RegexSetBuilder::new(include_str!("classify/verbose.regex").lines())
-        .unicode(false)
-        .build()
-        .expect("invalid built-in SSH log matcher")
-});
